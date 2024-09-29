@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title></title>
+
+  <link href="../Style/ProfilePage.css" rel="stylesheet" />
+  <link href="../Style/HomePage.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="card">
+    <div class="content">
+      {{ template "nav" . }}
+      <main class="ProfileMain">
+        <form id="myForm" method="POST" action="/Profile">
+          <div class="PostsBtn">
+            <div class="CreatedPostsBtnContainer">
+              <button class="CreatedPostsBtn" name="filterValue" value='CreatedPosts'>Created Posts</button>
+            </div>
+            <div class="LikedPostsBtnContainer">
+              <button class="LikedPostsBtn" name="filterValue" value='LikedPosts'>Liked Posts</button>
+            </div>
+            <div class="DislikedPostsBtnContainer">
+              <button class="DislikedPostsBtn" name="filterValue" value='DislikedPosts'>Disliked Posts</button>
+            </div>
+            <div class="CommentedPostsBtnContainer">
+              <button class="CommentedPostsBtn" name="filterValue" value='CommentedPosts'>Commented Posts</button>
+            </div>
+          </div>
+        </form>
+        <div class="posts">
+          {{range .Posts}}
+          <div class="post">
+            <div class="PostContent">
+              <div class="PostSenderContainer">
+                <div class="SenderImageContainer">
+                  <img src="../ProfileImages/{{.UserImg}}" class="SenderImage" />
+                </div>
+                <div class="CaptionContainer">
+                  <div class="ImageUserName">
+                    <p>{{.UserName}}</p>
+                  </div>
+                  <div class="ImageTime">
+                    <p>{{.Time}}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="PostContentContainer">
+                <p style="font-size: 18px;">{{.Title}}</p>
+                <p>{{.Content}}</p>
+                <div class="PostImageContainer" style="{{if eq .Image ""}} display: none;{{end}}">
+                  <img class="PostImage" src="../{{.Image}}" />
+                </div>
+              </div>
+
+              <div class="PostBtns">
+                <div class="LikeButtons">
+                  <div class="LikeContainer">
+                    <p id="NumLike{{ .PostId }}">{{ .Like }}</p>
+                    <label class="container">
+                      <input type="checkbox" name="LikeCheckBox" id="Like{{ .PostId }}" value="{{ .PostId }}"
+                        onchange="HandleLike(this,'Like')" />
+                      <svg class="LikeSVG" id="LikeSVG{{.PostId}}" value="{{.PostId}}" version="1.1" viewBox="0 0 32 32"
+                        xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <path
+                          d="M29.845,17.099l-2.489,8.725C26.989,27.105,25.804,28,24.473,28H11c-0.553,0-1-0.448-1-1V13  c0-0.215,0.069-0.425,0.198-0.597l5.392-7.24C16.188,4.414,17.05,4,17.974,4C19.643,4,21,5.357,21,7.026V12h5.002  c1.265,0,2.427,0.579,3.188,1.589C29.954,14.601,30.192,15.88,29.845,17.099z"
+                          id="XMLID_254_"></path>
+                        <path
+                          d="M7,12H3c-0.553,0-1,0.448-1,1v14c0,0.552,0.447,1,1,1h4c0.553,0,1-0.448,1-1V13C8,12.448,7.553,12,7,12z   M5,25.5c-0.828,0-1.5-0.672-1.5-1.5c0-0.828,0.672-1.5,1.5-1.5c0.828,0,1.5,0.672,1.5,1.5C6.5,24.828,5.828,25.5,5,25.5z"
+                          id="XMLID_256_"></path>
+                      </svg>
+                    </label>
+                  </div>
+                  <div class="DislikeContainer">
+                    <p id="NumDislike{{ .PostId }}">{{.Dislike}}</p>
+                    <label class="container">
+                      <input type="checkbox" name="LikeCheckBox" id="Dislike{{ .PostId }}" value="{{ .PostId }}"
+                        onchange="HandleLike(this,'Dislike')" />
+                      <svg class="LikeSVG" id="DislikeSVG{{.PostId}}" value="{{.PostId}}" id="Glyph" version="1.1"
+                        viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <path
+                          d="M2.156,14.901l2.489-8.725C5.012,4.895,6.197,4,7.528,4h13.473C21.554,4,22,4.448,22,5v14  c0,0.215-0.068,0.425-0.197,0.597l-5.392,7.24C15.813,27.586,14.951,28,14.027,28c-1.669,0-3.026-1.357-3.026-3.026V20H5.999  c-1.265,0-2.427-0.579-3.188-1.589C2.047,17.399,1.809,16.12,2.156,14.901z"
+                          id="XMLID_259_"></path>
+                        <path
+                          d="M25.001,20h4C29.554,20,30,19.552,30,19V5c0-0.552-0.446-1-0.999-1h-4c-0.553,0-1,0.448-1,1v14  C24.001,19.552,24.448,20,25.001,20z M27.001,6.5c0.828,0,1.5,0.672,1.5,1.5c0,0.828-0.672,1.5-1.5,1.5c-0.828,0-1.5-0.672-1.5-1.5  C25.501,7.172,26.173,6.5,27.001,6.5z"
+                          id="XMLID_260_"></path>
+                      </svg>
+                    </label>
+                  </div>
+                </div>
+                <div class="CommentDeleteBtnsContainer">
+                  <button class="bookmarkBtn" value="{{ .PostId }}" onclick="ToggleComment(value)">
+                    <span class="IconContainer">
+                      <img class="CommentIcon" src="../Style/Image/comment.png" />
+                    </span>
+                    <p class="Commenttext">Comment</p>
+                  </button>
+                  <button class="Btn Delete" id="DeleteBtn{{ .PostId }}" value="{{ .PostId }}"
+                    onclick="HandleDelete(value)">
+                    <div class="sign">
+                      <svg viewBox="0 0 16 16" class="bi bi-trash3-fill" fill="currentColor" height="18" width="18"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5">
+                        </path>
+                      </svg>
+                    </div>
+                    <div class="text">Delete</div>
+                  </button>
+                  <button class="edit-button" id="EditBtn{{ .PostId }}" onclick="HandleEditPost(value)" value="{{ .PostId }}">
+                    <svg class="edit-svgIcon" viewBox="0 0 512 512">
+                      <path
+                        d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1v32c0 8.8 7.2 16 16 16h32zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z">
+                      </path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="CommentsContainer HideComments" id="CommentsContainer{{ .PostId }}">
+              <div class="UserComments" id="Comment{{.PostId}}">
+                <h3 class="CommentHeader">Comments</h3>
+                {{range .Comments}}
+                <div class="Comment">
+
+                  <img src="../ProfileImages/{{.ProfileImage}}" class="CommentProfileImage" />
+                  <div class="CommentTextContainer">
+                    <p class="UserNameText">{{.UserName}}</p>
+                    <p class="CommentText" id="CommentText{{.CommentId}}">{{.Text}}</p>
+                    <p class="CommentDate">{{.Time}}</p>
+                  </div>
+
+                  <div class="CommentButtonsContainer">
+                    <div class="CommentLikeButtons">
+                      <div class="CommentLikeContainer">
+                        <p id="NumCLike{{ .CommentId }}"> {{.CLike}}</p>
+                        <label class="container">
+                          <input type="checkbox" id="CLike{{ .CommentId }}" value="{{ .CommentId }}"
+                            onchange="HandleCommentLike(this,'Like')" />
+                          <svg id="CLikeSVG{{.CommentId}}" class="LikeSVG CommentLikeSVG" id="Glyph" version="1.1"
+                            viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <path
+                              d="M29.845,17.099l-2.489,8.725C26.989,27.105,25.804,28,24.473,28H11c-0.553,0-1-0.448-1-1V13  c0-0.215,0.069-0.425,0.198-0.597l5.392-7.24C16.188,4.414,17.05,4,17.974,4C19.643,4,21,5.357,21,7.026V12h5.002  c1.265,0,2.427,0.579,3.188,1.589C29.954,14.601,30.192,15.88,29.845,17.099z"
+                              id="XMLID_254_"></path>
+                            <path
+                              d="M7,12H3c-0.553,0-1,0.448-1,1v14c0,0.552,0.447,1,1,1h4c0.553,0,1-0.448,1-1V13C8,12.448,7.553,12,7,12z   M5,25.5c-0.828,0-1.5-0.672-1.5-1.5c0-0.828,0.672-1.5,1.5-1.5c0.828,0,1.5,0.672,1.5,1.5C6.5,24.828,5.828,25.5,5,25.5z"
+                              id="XMLID_256_"></path>
+                          </svg>
+                        </label>
+                      </div>
+                      <div class="CommentDislikeContainer">
+                        <p id="NumCDislike{{ .CommentId }}">{{.CDislike}}</p>
+                        <label class="container">
+                          <input type="checkbox" id="CDislike{{ .CommentId }}" value="{{ .CommentId }}"
+                            onchange="HandleCommentLike(this,'Dislike')" />
+                          <svg class="LikeSVG DisLikeSVG CommentLikeSVG" id="CDislikeSVG{{.CommentId}}" id="Glyph"
+                            version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <path
+                              d="M2.156,14.901l2.489-8.725C5.012,4.895,6.197,4,7.528,4h13.473C21.554,4,22,4.448,22,5v14  c0,0.215-0.068,0.425-0.197,0.597l-5.392,7.24C15.813,27.586,14.951,28,14.027,28c-1.669,0-3.026-1.357-3.026-3.026V20H5.999  c-1.265,0-2.427-0.579-3.188-1.589C2.047,17.399,1.809,16.12,2.156,14.901z"
+                              id="XMLID_259_"></path>
+                            <path
+                              d="M25.001,20h4C29.554,20,30,19.552,30,19V5c0-0.552-0.446-1-0.999-1h-4c-0.553,0-1,0.448-1,1v14  C24.001,19.552,24.448,20,25.001,20z M27.001,6.5c0.828,0,1.5,0.672,1.5,1.5c0,0.828-0.672,1.5-1.5,1.5c-0.828,0-1.5-0.672-1.5-1.5  C25.501,7.172,26.173,6.5,27.001,6.5z"
+                              id="XMLID_260_"></path>
+                          </svg>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="CommentEditDeleteContainer" id="CommentEditDeleteContainer{{.CommentId}}">
+                      <button class="CommentDeleteBtn" id="CommentDeleteBztn{{.CommentId}}" value="{{ .CommentId }}"
+                        onclick="HandleCommentDelete(value)">
+                        <svg class="CommentDeleteSVG" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                          fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                          <path
+                            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
+                        </svg>
+                      </button>
+                      <button class="CommentEditBtn" id="CommentEditBtn{{.CommentId}}" value="{{.CommentId}}"
+                        onclick="handleEditButtonClick(value)">
+                        <svg class="CommentEditSVG" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                          fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                          <path
+                            d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+
+                </div>
+                {{end}}
+              </div>
+              <div class="Message">
+                <input id="CommentMessage{{.PostId}}" title="Write Message" tabindex="i" pattern="\d+"
+                  placeholder="Message.." class="MsgInput" type="text" />
+                <div Username="{{.UserName}}" UserId="{{.UserId}}" id="Comment{{ .PostId }}" value="{{ .PostId }}"
+                  onclick="Comment({{.PostId}})" class="SendSVGContainer">
+                  <svg xmlns="http://www.w3.org/2000/svg" version="1.0" width="30.000000pt" height="30.000000pt"
+                    viewBox="0 0 30.000000 30.000000" preserveAspectRatio="xMidYMid meet" class="SendSVG">
+                    <g transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)" fill="#2b2b35" stroke="none">
+                      <path
+                        d="M44 256 c-3 -8 -4 -29 -2 -48 3 -31 5 -33 56 -42 28 -5 52 -13 52 -16 0 -3 -24 -11 -52 -16 -52 -9 -53 -9 -56 -48 -2 -21 1 -43 6 -48 10 -10 232 97 232 112 0 7 -211 120 -224 120 -4 0 -9 -6 -12 -14z">
+                      </path>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          {{ end }}
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+<script>
+
+  function HandleEditPost(PostId) {
+    window.location.href = "/EditPost?Id=" + PostId;
+  }
+
+  function handleEditButtonClick(commentId) {
+    var commentText = document.getElementById(`CommentText${commentId}`);
+
+    var inputField = document.createElement('input');
+    inputField.type = 'text';
+    inputField.value = commentText.textContent;
+    inputField.className = 'CommentEditTextInput';
+
+    inputField.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        setNewValue();
+      }
+    });
+
+    var editButton = document.getElementById(`CommentEditBtn${commentId}`);
+    editButton.onclick = setNewValue;
+
+    function setNewValue() {
+      var newValue = inputField.value;
+
+      commentText.textContent = newValue;
+      commentText.style.display = 'inline'; // Show the updated comment text
+
+      inputField.parentNode.removeChild(inputField); // Remove the input field
+      editButton.onclick = function () {
+        handleEditButtonClick(commentId);
+      };
+
+      UpdateComment(commentId, newValue)
+    }
+
+    commentText.style.display = 'none'; // Hide the comment text
+    commentText.parentNode.insertBefore(inputField, commentText); // Insert the input field before the comment text
+    inputField.focus(); // Set focus on the input field
+  }
+
+  function UpdateComment(commentId, TextContent) {
+    fetch("/Profile", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        RequestType: "UpdateComment",
+        ID: commentId,
+        Text: TextContent,
+      }),
+    })
+      .then((response) => {
+        console.log(response);
+        // Handle the response for the clicked checkbox
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+
+  var clickedButton = {{.ClickedButton }};
+  function updateButtonClasses(clickedButton) {
+  const buttons = [
+    {
+      name: "CreatedPosts",
+      class: ".CreatedPostsBtn",
+      containerClass: ".CreatedPostsBtnContainer"
+    },
+    {
+      name: "LikedPosts",
+      class: ".LikedPostsBtn",
+      containerClass: ".LikedPostsBtnContainer"
+    },
+    {
+      name: "DislikedPosts",
+      class: ".DislikedPostsBtn",
+      containerClass: ".DislikedPostsBtnContainer"
+    },
+    {
+      name: "CommentedPosts",
+      class: ".CommentedPostsBtn",
+      containerClass: ".CommentedPostsBtnContainer"
+    }
+  ];
+
+  buttons.forEach(button => {
+    const buttonElement = document.querySelector(button.class);
+    const containerElement = document.querySelector(button.containerClass);
+
+    if (clickedButton === button.name) {
+      buttonElement.classList.add('clicked');
+      containerElement.classList.add('ClickedContainer');
+    } else {
+      buttonElement.classList.remove('clicked');
+      containerElement.classList.remove('ClickedContainer');
+    }
+  });
+}
+
+updateButtonClasses(clickedButton);
+
+
+  var likedPosts = {{ .LikedPosts }};
+
+  if (likedPosts !== null) {
+    likedPosts.forEach(function (like) {
+      value = like.split("_")
+      checkbox = document.getElementById(value.join(""))
+      if (checkbox !== null) {
+        checkbox.checked = true
+        document.getElementById(`${value[0]}SVG${value[1]}`).classList.add(`${value[0]}SVGClicked`)
+      }
+    });
+  }
+
+
+
+  var likedComments = {{ .LikedComments }};
+  if (likedComments !== null) {
+    likedComments.forEach(function (like) {
+      value = like.split("_")
+      checkbox = document.getElementById(value.join(""))
+      if (checkbox !== null) {
+        checkbox.checked = true
+        document.getElementById(`${value[0]}SVG${value[1]}`).classList.add(`${value[0]}SVGClicked`)
+      }
+    });
+  }
+
+
+  function HandleCommentLike(clickedCheckbox, checkboxName) {
+    console.log(checkboxName)
+    const checkboxValue = clickedCheckbox.value;
+    const isChecked = clickedCheckbox.checked;
+    if (checkboxName === 'Dislike' && document.getElementById(`CLike${checkboxValue}`).checked === true) {
+      clickedCheckbox.checked = false
+    } else if (checkboxName === 'Like' && document.getElementById(`CDislike${checkboxValue}`).checked === true) {
+      clickedCheckbox.checked = false
+    } else {
+      fetch("/CommentLikeHandle", {
+        method: "POST",
+        body: JSON.stringify({
+          RequestType: "like",
+          Type: checkboxName,
+          ID: checkboxValue,
+          Checked: isChecked,
+        }),
+      })
+        .then((response) => {
+          console.log(response);
+          // Handle the response for the clicked checkbox
+        })
+        .catch((error) => console.error("Error:", error));
+
+      //Store Value
+      const id = clickedCheckbox.getAttribute("id");
+      const LikeNum = document.getElementById(`Num${id}`);
+
+      // Get the current text content and parse it as an integer
+      let currentValue = parseInt(LikeNum.textContent);
+      if (isChecked === true) {
+        // Set the updated value as the new text content of the element
+        LikeNum.textContent = (currentValue + 1).toString();
+      } else {
+        LikeNum.textContent = (currentValue - 1).toString();
+      }
+      document.getElementById(`C${checkboxName}SVG${checkboxValue}`).classList.toggle(`C${checkboxName}SVGClicked`)
+
+    }
+
+  }
+
+
+
+
+function Comment(postId, username, userId) {
+  let userName = {{ .Username }}
+  let profileImage = {{.ProfileImg }}
+
+  var commentId;
+
+  let CommentMessage = document.getElementById(`CommentMessage${postId}`);
+  var message = CommentMessage.value;
+
+  if (message.length > 200) {
+    alert("Comment cannot be more than 200 characters.");
+    return;
+  } else if (message.length === 0) {
+    alert("Empty Comments are not allowed");
+  } else {
+
+    fetch('/CommentHandler', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message: message, postId: postId, username: userName, profileImage: profileImage }),
+    })
+      .then(function (response) {
+        if (response.ok) {
+          CommentMessage.value = ''; // Reset the input field
+          // Handle the response from the backend if needed
+          return response.json(); // Parse the response body as JSON
+        } else {
+          throw new Error('Error sending message.');
+        }
+      })
+      .then(function (data) {
+        commentId = data.CommentId;
+        console.log(commentId);
+        createCommentElement(commentId, message, postId, userName, profileImage);
+      })
+      .catch(function (error) {
+        console.error('Error sending message:', error);
+        // Handle the error if the message fails to send
+      });
+  }
+}
+
+  function createCommentElement(commentId, message, postId, userName, profileImage) {
+    var commentElement = document.createElement("div");
+    commentElement.classList.add("Comment");
+    var Time = new Date().toLocaleString();
+
+    commentElement.innerHTML = `
+  <img src="../ProfileImages/${profileImage}" class="CommentProfileImage" />
+  <div class="CommentTextContainer">
+    <p class="UserNameText">${userName}</p>
+    <p class="CommentText" id="CommentText${commentId}">${message}</p>
+    <p class="CommentDate">${Time}</p>
+  </div>
+
+  <div class="CommentButtonsContainer">
+  <div class="CommentLikeButtons">
+    <div class="CommentLikeContainer">
+      <p id="NumCLike${commentId}">0</p>
+      <label class="container">
+        <input type="checkbox" id="CLike${commentId}"
+        value="${commentId}"
+        onchange="HandleCommentLike(this,'Like')" />
+        <svg class="LikeSVG CommentLikeSVG" id="CLikeSVG${commentId}" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path
+          d="M29.845,17.099l-2.489,8.725C26.989,27.105,25.804,28,24.473,28H11c-0.553,0-1-0.448-1-1V13  c0-0.215,0.069-0.425,0.198-0.597l5.392-7.24C16.188,4.414,17.05,4,17.974,4C19.643,4,21,5.357,21,7.026V12h5.002  c1.265,0,2.427,0.579,3.188,1.589C29.954,14.601,30.192,15.88,29.845,17.099z"
+          id="XMLID_254_"
+        ></path>
+        <path
+          d="M7,12H3c-0.553,0-1,0.448-1,1v14c0,0.552,0.447,1,1,1h4c0.553,0,1-0.448,1-1V13C8,12.448,7.553,12,7,12z   M5,25.5c-0.828,0-1.5-0.672-1.5-1.5c0-0.828,0.672-1.5,1.5-1.5c0.828,0,1.5,0.672,1.5,1.5C6.5,24.828,5.828,25.5,5,25.5z"
+          id="XMLID_256_"
+        ></path>
+        </svg>
+      </label>
+    </div>
+    <div class="CommentDislikeContainer">
+      <p id="NumCDislike${commentId}">0</p>
+      <label class="container">
+        <input type="checkbox" id="CDislike${commentId}"
+        value="${commentId}"
+        onchange="HandleCommentLike(this,'Dislike')" />
+        <svg class="LikeSVG DisLikeSVG CommentLikeSVG" id="CDislikeSVG${commentId}" id="Glyph" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <path
+          d="M2.156,14.901l2.489-8.725C5.012,4.895,6.197,4,7.528,4h13.473C21.554,4,22,4.448,22,5v14  c0,0.215-0.068,0.425-0.197,0.597l-5.392,7.24C15.813,27.586,14.951,28,14.027,28c-1.669,0-3.026-1.357-3.026-3.026V20H5.999  c-1.265,0-2.427-0.579-3.188-1.589C2.047,17.399,1.809,16.12,2.156,14.901z"
+          id="XMLID_259_"
+        ></path>
+        <path
+          d="M25.001,20h4C29.554,20,30,19.552,30,19V5c0-0.552-0.446-1-0.999-1h-4c-0.553,0-1,0.448-1,1v14  C24.001,19.552,24.448,20,25.001,20z M27.001,6.5c0.828,0,1.5,0.672,1.5,1.5c0,0.828-0.672,1.5-1.5,1.5c-0.828,0-1.5-0.672-1.5-1.5  C25.501,7.172,26.173,6.5,27.001,6.5z"
+          id="XMLID_260_"
+        ></path> 
+        </svg>
+      </label>
+    </div>
+  </div>
+  <div class="CommentEditDeleteContainer" id="CommentEditDeleteContainer${commentId}" style="display: flex;">
+        <button class="CommentDeleteBtn" id="CommentDeleteBztn${commentId}" value="${commentId}" onclick="HandleCommentDelete(value)">
+          <svg class="CommentDeleteSVG" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+            <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+          </svg>
+        </button>
+        <button  class="CommentEditBtn" id="CommentEditBtn${commentId}" value="${commentId}" onclick="handleEditButtonClick(value)">
+          <svg class="CommentEditSVG" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001"/>
+          </svg>
+        </button>
+        </div>
+    </div>
+`;
+
+    var commentsContainer = document.getElementById("Comment" + postId);
+    commentsContainer.appendChild(commentElement);
+  }
+  // Get references to the required elements
+
+
+  PostCommentBtn = document.querySelectorAll(".bookmarkBtn");
+
+  function ToggleComment(id) {
+    let CommentContainer = document.getElementById(`CommentsContainer${id}`)
+    CommentContainer.classList.toggle('HideComments')
+  }
+
+
+
+  function HandleLike(clickedCheckbox, checkboxName) {
+
+    const checkboxValue = clickedCheckbox.value;
+    const isChecked = clickedCheckbox.checked;
+    if (checkboxName === 'Dislike' && document.getElementById(`Like${checkboxValue}`).checked === true) {
+      clickedCheckbox.checked = false
+    } else if (checkboxName === 'Like' && document.getElementById(`Dislike${checkboxValue}`).checked === true) {
+      clickedCheckbox.checked = false
+    } else {
+      fetch("/Profile", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          RequestType: "like",
+          Type: checkboxName,
+          ID: checkboxValue,
+          Checked: isChecked,
+        }),
+      })
+        .then((response) => {
+          console.log(response);
+          // Handle the response for the clicked checkbox
+        })
+        .catch((error) => console.error("Error:", error));
+
+      //Store Value
+      const id = clickedCheckbox.getAttribute("id");
+      const LikeNum = document.getElementById(`Num${id}`);
+
+      // Get the current text content and parse it as an integer
+      let currentValue = parseInt(LikeNum.textContent);
+      if (isChecked === true) {
+        // Set the updated value as the new text content of the element
+        LikeNum.textContent = (currentValue + 1).toString();
+      } else {
+        LikeNum.textContent = (currentValue - 1).toString();
+      }
+      document.getElementById(`${checkboxName}SVG${checkboxValue}`).classList.toggle(`${checkboxName}SVGClicked`)
+    }
+  }
+
+
+  function HandleDelete(PostId) {
+    console.log(PostId)
+    fetch("/Profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        RequestType: "delete",
+        ID: PostId,
+      }),
+    })
+      .then((response) => {
+        console.log(response);
+        // Handle the response for the clicked checkbox
+      })
+      .catch((error) => console.error("Error:", error));
+    location.reload();
+  }
+
+  function HandleCommentDelete(CommentId) {
+    fetch("/Profile", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        RequestType: "DeleteComment",
+        ID: CommentId,
+      }),
+    })
+      .then((response) => {
+        console.log(response);
+        // Handle the response for the clicked checkbox
+      })
+      .catch((error) => console.error("Error:", error));
+    location.reload();
+  }
+
+  var CreatedPosts = {{ .Createdposts }};
+  if (CreatedPosts !== null) {
+    CreatedPosts.forEach(function (PostId) {
+      DeleteBtn = document.getElementById(`DeleteBtn${PostId}`)
+      if (DeleteBtn !== null) {
+        DeleteBtn.style.display = "flex";
+      }
+      EditBtn = document.getElementById(`EditBtn${PostId}`)
+      if (EditBtn !== null) {
+        EditBtn.style.display = "flex";
+      }
+    });
+  }
+
+  var CreatedComments = {{ .CreatedComments }};
+  if (CreatedComments !== null) {
+    CreatedComments.forEach(function (CommentId) {
+      CommentBtnsContainer = document.getElementById(`CommentEditDeleteContainer${CommentId}`)
+      if (CommentBtnsContainer !== null) {
+        CommentBtnsContainer.style.display = "flex";
+      }
+    });
+  }
+
+
+
+
+
+</script>
+
+</html>

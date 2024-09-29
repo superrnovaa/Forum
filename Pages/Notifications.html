@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <link href="../Style/Notifications.css" rel="stylesheet" />
+
+</head>
+<body>
+  <div class="card">
+    <div class="content">
+      {{ template "nav" . }}
+      <main class="NotificationsMain"> 
+        <h2>Notifications</h2>
+        {{if .Notifications}}
+        {{range .Notifications}}
+        <div class="NotificationContainer">
+            <div class="SenderImageContainer">
+              <img src="../ProfileImages/{{.FollowerProfile}}" class="SenderProfile" />
+            </div>
+            <div class="CaptionContainer">
+              <div class="SenderUserName">
+                <p>{{.FollowerUserName}}</p>
+              </div>
+              <div class="Action">
+                <p>{{.Action}} <br> {{.Comment}}</p>
+              </div>
+            </div>
+            <div class="PostImage" style="{{if eq .PostImage ""}} display: none;{{end}}">
+                <img src="../{{.PostImage}}" class="PostImage" />
+            </div>
+        </div>
+        {{end}}
+        {{else}}
+          <h3 style="color:grey">No notifications</h3>
+        {{end}}
+    </main>
+    </div>
+</div>
+</body>
+</html>
